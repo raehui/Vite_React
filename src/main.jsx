@@ -12,7 +12,8 @@ const initState = {
   loginModal:{
     title:"",
     show:false
-  } 
+  },
+  logoutTimer:null 
 };
 
 //action 에는 2가지의 정보(type, payload)를 담을 수 있다.
@@ -30,8 +31,12 @@ const reducer = (state = initState, action)=>{
       ...state,
       loginModal : action.payload
     }
-  }
-  else {
+  } else if(action.type === "LOGOUT_TIMER"){
+    newState = {
+      ...state,
+      logoutTimer:action.payload
+    };
+  }else {
     newState =state;
   }
   return newState;
