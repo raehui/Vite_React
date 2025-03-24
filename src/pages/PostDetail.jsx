@@ -222,6 +222,10 @@ function CommentLi({ postNum, comment, onRefresh }) {
 
     const [deleteShow, setDeleteShow] = useState(false);
 
+     
+
+
+
     // 프로필 이미지 처리
     const profileImage = comment.profileImage ?
         <img className={cx("profile-image")} src={`/upload/${comment.profileImage}`} alt="프로필" />
@@ -256,7 +260,7 @@ function CommentLi({ postNum, comment, onRefresh }) {
         const formObject = Object.fromEntries(formData.entries());
         api.patch(`/posts/${postNum}/comments`, formObject)
             .then(res => {
-                
+
                 onRefresh();
                 setUpdateForm(false);
             })
@@ -273,11 +277,12 @@ function CommentLi({ postNum, comment, onRefresh }) {
     }
     //삭제 버튼을 눌렀을 때 실행할 함수
     const handleDeleteButton = () => {
-        setDeleteShow(false);
-    }
-    
+        setDeleteShow(true);
 
-    
+    }
+
+
+
     /*
        link 에 대입 되는 값은  false 또는 a 요소 2개가 들어 있는 jsx 객체가 대입된다.
        react 는 boolean 값은 UI 에 랜더링하지 않는다.
@@ -292,20 +297,27 @@ function CommentLi({ postNum, comment, onRefresh }) {
 
     return (
         <>
-            <ConfirmModal show={handleDeleteButton} message="이 댓글을 삭제 하시겠습니까?"
-                onCancel={() => handleDeleteButton(false)} onYes={() => {
-                    api.delete(`/posts/${comment.num}`)
-                        .then(res => {
-                            comment.deleted = "yes";
-                        })
-                        .catch(error => {
-                            console.log(error);
-                        });
-                    handleDeleteButton(false);
-                }} />
-            
+            {deleteShow == true &&
+                <ConfirmModal show={deleteShow} message="이 댓글을 삭제 하시겠습니까?"
+                    onCancel={() => setDeleteShow(false)} onYes={() => {
+                        api.delete(`/posts/${comment.num}/comments`)
+                            .then(res => {
+                                console.log(res.data);
+                                
+                                comment.deleted="yes";
+                                setDeleteShow(false);
+                                
+                                
+                            })
+                            .catch(error => {
+                                console.log(error);
+                            });
+                        
+                    }} />
+            }
+
             {/* 댓글 글번호 와 댓글의 부모 번호가 다르면 대댓글임 */}
-            <li className={cx({"indent": comment.num !== comment.parentNum})}>
+            <li className={cx({ "indent": comment.num !== comment.parentNum })}>
                 {comment.deleted === "yes" ?
                     <>
                         <svg style={{ display: comment.num !== comment.parentNum ? "inline" : "none" }}
