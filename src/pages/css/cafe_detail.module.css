@@ -70,10 +70,7 @@
 .comment-form button, .re-insert-form button, .update-form button{
     flex-basis: 100px;
 }
-/* 대댓글폼은 일단 숨겨 놓는다 */
-.re-insert-form, .update-form{
-    display: none;
-}
+
 
 /* 댓글 출력 디자인 */
 .comments pre {
