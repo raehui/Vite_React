@@ -125,7 +125,7 @@ function PostDetail(props) {
 
 
     };
-
+    // git test
     return (
         <>
             {/* state 는 자세히 보는 글의 정보 */}
