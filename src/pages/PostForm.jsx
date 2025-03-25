@@ -13,10 +13,34 @@ function PostForm(props) {
     //SmartEditor 에 작성한 내용을 textarea 의 value 로 넣어 줄때 필요한 함수가 editorTool 이다 
     const [editorTool, setEditorTool] = useState([])
 
+    //현재까지 입력한 내용을 상태값으로 관리
+    const [currentContent, setCurrentContent] = useState("");
+
     useEffect(()=>{
         //initEditor() 함수를 호출하면서 SmartEditor 로 변환할 textarea 의 id 를 전달하면
 		//textarea 가 SmartEditor 로 변경되면서 에디터 tool 객체가 리턴된다.  
 		setEditorTool(initEditor("content")); // initEditor() 함수를 호출해야 SmartEditor 가 초기화된다.
+
+        //resize 이벤트가 발생할 때마다 호출될 함수
+        const handleResize = ()=>{
+            setEditorTool(initEditor("content"));
+            console.log("안녕");
+            editorTool.exec(); // 스마트에디터의 내용을 textarea 의 value 로 줌
+            
+            
+            // setCurrentContent(inputContent.current.value);
+            // console.log(currentContent);
+        }
+        //resize 이벤트가 발생할 때 실행할 함수 등록
+        window.addEventListener("resize", handleResize);
+
+        return ()=>{
+            //이벤트 리스너 제거하기
+            window.removeEventListener("resize", handleResize);
+
+
+        };
+
     }, [])
 
     // 입력한 내용을 얻어오기 위한 useRef()
@@ -42,7 +66,7 @@ function PostForm(props) {
                 </FloatingLabel>
                 <Form.Group className="mb-3"  controlId="content">
                     <Form.Label>내용</Form.Label>
-                    <Form.Control ref={inputContent} as="textarea" rows="10"/>
+                    <Form.Control ref={inputContent}  as="textarea" rows="10"/>
                 </Form.Group> 
                 <Button type="submit" onClick={(e)=>{
                     // 폼 제출 막기
