@@ -11,7 +11,8 @@ const initState = {
   userInfo :null,
   loginModal:{
     title:"",
-    show:false
+    show:false,
+    url:null // 로그인 이후 갈 곳의 정보
   },
   logoutTimer:null 
 };
@@ -50,11 +51,11 @@ const store = createStore(reducer);
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-  <React.StrictMode>
+  
     <Provider store={store}>
       <RouterProvider router={router}/>
     </Provider>
-  </React.StrictMode>
+  
 );
 
 

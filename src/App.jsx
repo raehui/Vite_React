@@ -1,4 +1,4 @@
-import { useLocation, useOutlet } from "react-router-dom";
+import { useLocation, useNavigate, useOutlet } from "react-router-dom";
 //bootstrap css 로딩하기 
 import 'bootstrap/dist/css/bootstrap.css'
 import BsNavBar from "./components/BsNavBar";
@@ -16,6 +16,7 @@ function App() {
     //로그인 모달의 상태값을 redux store 로 부터 얻어낸다.
     const loginModal = useSelector(state => state.loginModal);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     //App component 가 활성화 되는 시점에 token 관련 처리
     useEffect(() => {
@@ -63,6 +64,7 @@ function App() {
             delete localStorage.token;
             dispatch({ type: 'USER_INFO', payload: null });
             alert('토큰이 만료되어 자동 로그아웃 되었습니다.');
+            navigate("/");
         };
 
         //여기서 리턴한 함수는 이 컴포넌트가 비활성화 되기 직전에 호출된다.(무언가 마무리 작업을 하기 적당함)

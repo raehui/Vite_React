@@ -11,6 +11,9 @@ import binder from "classnames/bind";
 import { useDispatch, useSelector } from 'react-redux';
 import ConfirmModal from '../components/ConfirmModal';
 import api from '../api';
+
+import { AnimatePresence, motion } from "framer-motion";
+
 const cx = binder.bind(customCss);
 
 function PostDetail(props) {
@@ -186,7 +189,12 @@ function PostDetail(props) {
             <form onSubmit={handleCommentFormSubmit} className={cx("comment-form")} method="post">
                 <input type="hidden" name="postNum" defaultValue={num} />
                 <input type="hidden" name="targetWriter" defaultValue={state.writer} />
-                <textarea name="content" defaultValue={!userName ? '댓글 작성을 위해 로그인이 필요 합니다' : ''}></textarea>
+                {
+                    userName ?
+                    <textarea name="content" key="ta1"/>
+                    :
+                    <textarea name="content" value='댓글 작성을 위해 로그인이 필요 합니다' key="ta2"></textarea>
+                }
                 <button type="submit">등록</button>
             </form>
             <div className={cx("comments")}>
@@ -252,9 +260,9 @@ function CommentLi({ postNum, comment, onRefresh }) {
         //폼에 입력한 내용을 object 로 얻어낸다.
         const formData = new FormData(e.target);
         const formObject = Object.fromEntries(formData.entries());
-        api.patch(`/posts/${postNum}/comments`, formObject)
-            .then(res => {
-                
+        api.patch(`/posts/${postNum}/comments/${comment.num}`, formObject)
+            .then(() => {
+
                 onRefresh();
                 setUpdateForm(false);
             })
@@ -264,14 +272,23 @@ function CommentLi({ postNum, comment, onRefresh }) {
     //답글 버튼을 눌렀을 때 실행할 함수 , insertForm 이 true 로 변경
     const handleInsertButton = () => {
         setInsertForm(!insertForm);
+        setUpdateForm(false);
     }
     // 수정 버튼을 눌렀을 때 실행할 함수
     const handleUpdateButton = () => {
         setUpdateForm(!updateForm);
+        setInsertForm(false);
     }
     //삭제 버튼을 눌렀을 때 실행할 함수
     const handleDeleteButton = () => {
-
+        const isDelete = window.confirm("댓글을 삭제 하시겠습니까?");
+        if (isDelete) {
+            api.delete(`/posts/${postNum}/comments/${comment.num}`)
+                .then(() => {
+                    onRefresh();
+                })
+                .catch(error => console.log(error));
+        }
     }
 
     /*
@@ -289,7 +306,7 @@ function CommentLi({ postNum, comment, onRefresh }) {
     return (
         <>
             {/* 댓글 글번호 와 댓글의 부모 번호가 다르면 대댓글임 */}
-            <li className={cx({"indent": comment.num !== comment.parentNum})}>
+            <li className={cx({ "indent": comment.num !== comment.parentNum })}>
                 {comment.deleted === "yes" ?
                     <>
                         <svg style={{ display: comment.num !== comment.parentNum ? "inline" : "none" }}
@@ -329,21 +346,44 @@ function CommentLi({ postNum, comment, onRefresh }) {
                                 <pre>{comment.content}</pre>
                             </dd>
                         </dl>
+
                         {insertForm &&
-                            <form onSubmit={handleReInsertSubmit} className={cx("re-insert-form")} method="post">
-                                <input type="hidden" name="postNum" defaultValue={postNum} />
-                                <input type="hidden" name="targetWriter" defaultValue={comment.writer} />
-                                <input type="hidden" name="parentNum" defaultValue={comment.parentNum} />
-                                <textarea name="content"></textarea>
-                                <button type="submit">등록</button>
-                            </form>
+                            <AnimatePresence mode='sync'>
+                                <motion.div
+                                    key="form1"
+                                    initial={{ opacity: 0, scaleX: 0 }}
+                                    animate={{ opacity: 1, scaleX: 1 }}
+                                    exit={{ opacity: 0, scaleY: 0 }}
+                                    transition={{ duration: 0.2, ease: "easeOut" }}
+                                    style={{ transformOrigin: "top" }}
+                                >
+                                    <form onSubmit={handleReInsertSubmit} className={cx("re-insert-form")} method="post">
+                                        <input type="hidden" name="postNum" defaultValue={postNum} />
+                                        <input type="hidden" name="targetWriter" defaultValue={comment.writer} />
+                                        <input type="hidden" name="parentNum" defaultValue={comment.parentNum} />
+                                        <textarea name="content"></textarea>
+                                        <button type="submit">등록</button>
+                                    </form>
+                                </motion.div>
+                            </AnimatePresence>
                         }
                         {updateForm &&
-                            <form onSubmit={handleUpdateSubmit} className={cx("update-form")} method="post">
-                                <input type="hidden" name="num" defaultValue={comment.num} />
-                                <textarea name="content" defaultValue={comment.content}></textarea>
-                                <button type="submit">수정확인</button>
-                            </form>
+                            <AnimatePresence mode='sync'>
+                                <motion.div
+                                    key="form2"
+                                    initial={{ opacity: 0, scaleX: 0 }}
+                                    animate={{ opacity: 1, scaleX: 1 }}
+                                    exit={{ opacity: 0, scaleY: 0 }}
+                                    transition={{ duration: 0.2, ease: "easeOut" }}
+                                    style={{ transformOrigin: "top" }}
+                                >
+                                    <form onSubmit={handleUpdateSubmit} className={cx("update-form")} method="post">
+                                        <input type="hidden" name="num" defaultValue={comment.num} />
+                                        <textarea name="content" defaultValue={comment.content}></textarea>
+                                        <button type="submit">수정확인</button>
+                                    </form>
+                                </motion.div>
+                            </AnimatePresence>
                         }
                     </>
                 }

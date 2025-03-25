@@ -49,10 +49,11 @@ function BsNavBar(props) {
                                     //요청 헤더에 token 포함되도록 설정한 것 삭제하기
                                     delete api.defaults.headers.common["Authorization"]
                                     // store 에 userInfo 를 초기화
-                                    dispatch({type:"USER_INFO", payload: null })
+                                    // dispatch({type:"USER_INFO", payload: null })
                                     //인덱스로 이동
                                     navigate("/");
                                     //로그아웃 타이머 초기화
+                                    // 리덕스 스토어에 있는 timer 삭제하기
                                     clearTimeout(logoutTimer);
                                     dispatch({
                                         type:"LOGOUT_TIMER",
