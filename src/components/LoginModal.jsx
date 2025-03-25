@@ -59,6 +59,7 @@ function LoginModal(props) {
             }, remainingTime);
             
             //로그아웃 타이머를 store 에 등록
+            //setTimeout 이 id 를 반환하기에 payload 에 생성된 타이머를 담을 수가 있다.
             dispatch({
                 type:"LOGOUT_TIMER",
                 payload:logoutTimer

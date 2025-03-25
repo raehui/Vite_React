@@ -14,6 +14,7 @@ function BsNavBar(props) {
     const userInfo = useSelector(state => state.userInfo);
     // route 이동을 하기 위한 hook
     const navigate = useNavigate();
+    // 로그인 시 logoutTimer 가 생성됨
     //로그아웃 타이머
     const logoutTimer = useSelector(state => state.logoutTimer);
 
