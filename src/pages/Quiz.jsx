@@ -179,6 +179,7 @@ function Quiz(){
 
     return (
         <>  
+            {/* <pre>{JSON.stringify(state, null, 2)}</pre> */}
             <ConfirmModal show={modal.show} message={modal.message} onYes={handleYes} onCancel={handleCancel}/>
             <h1> javascript 문제</h1>
             <ProgressBar now={state.progress} animated variant='success' className="mb-2"/>
