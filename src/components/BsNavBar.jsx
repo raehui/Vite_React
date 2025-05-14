@@ -28,7 +28,7 @@ function BsNavBar(props) {
                         <Nav className='me-auto'>
                             <Nav.Link as={NavLink} to="/">Home</Nav.Link>
                             <Nav.Link as={NavLink} to="/posts">Post</Nav.Link>
-                            <Nav.Link as={NavLink} to={"/quiz"}>Quiz</Nav.Link>
+                            <Nav.Link as={NavLink} to="/quiz">Quiz</Nav.Link>
                         </Nav>
                         {/* 해당 값이 존재한다면... 실행 */}
                         {/* null, undefined ,"" , 0 , false = 값이 존재하지 않음 */}

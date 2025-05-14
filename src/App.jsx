@@ -37,7 +37,7 @@ function App() {
                     const remainingTime = exp - now;
                     //자동 로그아웃 예약
                     const logoutTimer = setTimeout(() => {
-                        doLogout(); 
+                        doLogout();
                     }, remainingTime);
 
                     // 로그아웃 타이머를 store 에 등록

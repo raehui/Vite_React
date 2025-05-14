@@ -30,8 +30,6 @@ const routes=[
     {path:"/posts/:num/edit", element:<ProtectedRoute><PostUpdateForm/></ProtectedRoute>},
     {path:"/quiz", element: <Quiz/>}
 
-
-
 ];
 
 //export 해출 router 객체를 만든다.
